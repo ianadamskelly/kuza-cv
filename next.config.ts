@@ -1,4 +1,7 @@
 import type { NextConfig } from "next";
+import path from "node:path";
+
+const projectRoot = path.resolve();
 
 const supabaseHost = (() => {
   try {
@@ -9,6 +12,11 @@ const supabaseHost = (() => {
 })();
 
 const nextConfig: NextConfig = {
+  output: "standalone",
+  outputFileTracingRoot: projectRoot,
+  turbopack: {
+    root: projectRoot,
+  },
   images: {
     remotePatterns: supabaseHost
       ? [
