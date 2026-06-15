@@ -4,12 +4,14 @@
 FROM node:22-alpine AS deps
 WORKDIR /app
 COPY package.json package-lock.json ./
-RUN npm ci
+RUN npm ci --no-audit --no-fund
 
 # --- build ---
 FROM node:22-alpine AS build
 WORKDIR /app
 ENV NEXT_TELEMETRY_DISABLED=1
+# Cap V8 heap so the build doesn't get OOM-killed on small VPSes (1–2 GB).
+ENV NODE_OPTIONS=--max-old-space-size=1536
 
 # Public env vars baked into the client bundle. Pass at build time via
 # Coolify's "Build Arguments" or `docker build --build-arg`.
