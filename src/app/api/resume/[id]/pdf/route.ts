@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { renderResumePdf } from "@/pdf/render";
 import { emptyResume, type ResumeData, type TemplateId } from "@/types/resume";
+import { canonicalUrl } from "@/lib/canonical-url";
 
 export const runtime = "nodejs";
 
@@ -17,7 +18,7 @@ export async function GET(
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    return NextResponse.redirect(canonicalUrl(request, "/login"));
   }
 
   // Preview path: render from live data (any owner can preview their own).
