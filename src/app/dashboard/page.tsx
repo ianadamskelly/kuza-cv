@@ -7,6 +7,7 @@ import { getTemplate } from "@/lib/templates";
 import { cn } from "@/lib/utils";
 import { FileText, Plus } from "lucide-react";
 import type { TemplateId } from "@/types/resume";
+import { ResumeCardMenu } from "@/components/dashboard/resume-card-menu";
 
 type ResumeRow = {
   id: string;
@@ -78,22 +79,22 @@ export default async function DashboardPage() {
               {list.map((r) => {
                 const tpl = getTemplate(r.template_id);
                 return (
-                  <li key={r.id}>
-                    <Link
-                      href={`/builder/${r.id}`}
-                      className="block rounded-xl border bg-card p-4 hover:shadow-md transition-shadow"
-                    >
-                      <div className="flex items-start justify-between gap-2">
-                        <div>
-                          <p className="font-medium">{r.title}</p>
+                  <li
+                    key={r.id}
+                    className="relative rounded-xl border bg-card hover:shadow-md transition-shadow"
+                  >
+                    <Link href={`/builder/${r.id}`} className="block p-4 pr-12">
+                      <div className="flex items-start gap-2">
+                        <span
+                          className="size-2.5 rounded-full mt-1.5 shrink-0"
+                          style={{ background: tpl.accentColor }}
+                        />
+                        <div className="min-w-0">
+                          <p className="font-medium truncate">{r.title}</p>
                           <p className="text-xs text-muted-foreground mt-0.5">
                             {tpl.name} template
                           </p>
                         </div>
-                        <span
-                          className="size-2.5 rounded-full mt-1"
-                          style={{ background: tpl.accentColor }}
-                        />
                       </div>
                       <p className="text-xs text-muted-foreground mt-3">
                         Updated{" "}
@@ -104,6 +105,13 @@ export default async function DashboardPage() {
                         })}
                       </p>
                     </Link>
+                    <div className="absolute top-3 right-3">
+                      <ResumeCardMenu
+                        resumeId={r.id}
+                        currentTitle={r.title}
+                        currentTemplate={r.template_id}
+                      />
+                    </div>
                   </li>
                 );
               })}

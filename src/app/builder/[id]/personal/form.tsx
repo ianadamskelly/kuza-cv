@@ -7,6 +7,7 @@ import { Tip } from "@/components/builder/tip";
 import { StepperNav } from "@/components/builder/stepper-nav";
 import { BottomBar } from "@/components/builder/bottom-bar";
 import { useAutosave } from "@/components/builder/use-autosave";
+import { AvatarUpload } from "@/components/builder/avatar-upload";
 import { tips } from "@/lib/tips";
 import type { ResumeData } from "@/types/resume";
 import { useEffect } from "react";
@@ -21,7 +22,9 @@ export function PersonalForm({
   initial: Personal;
 }) {
   const { save, saving } = useAutosave(resumeId);
-  const { register, watch } = useForm<Personal>({ defaultValues: initial });
+  const { register, watch, setValue, getValues } = useForm<Personal>({
+    defaultValues: initial,
+  });
 
   useEffect(() => {
     const sub = watch((value) => {
@@ -29,6 +32,11 @@ export function PersonalForm({
     });
     return () => sub.unsubscribe();
   }, [watch, save]);
+
+  function setAvatar(url: string | undefined) {
+    setValue("avatarUrl", url, { shouldDirty: true });
+    save({ personal: { ...getValues(), avatarUrl: url } });
+  }
 
   return (
     <>
@@ -43,6 +51,14 @@ export function PersonalForm({
               How recruiters reach you.
             </p>
           </header>
+
+          <div className="space-y-2">
+            <Label>Profile photo</Label>
+            <AvatarUpload
+              value={watch("avatarUrl")}
+              onChange={setAvatar}
+            />
+          </div>
 
           <Field label="Full name" htmlFor="fullName">
             <Input id="fullName" {...register("fullName")} />

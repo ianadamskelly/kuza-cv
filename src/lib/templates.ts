@@ -6,6 +6,7 @@ export type Template = {
   tagline: string;
   bestFor: string;
   accentColor: string;
+  previewSrc: string;
 };
 
 export const templates: Template[] = [
@@ -15,6 +16,7 @@ export const templates: Template[] = [
     tagline: "ATS-safe, clean, traditional",
     bestFor: "Corporate, finance, government, formal applications",
     accentColor: "#1f2937",
+    previewSrc: "/templates/classic.png",
   },
   {
     id: "modern",
@@ -22,13 +24,15 @@ export const templates: Template[] = [
     tagline: "Two-column with a subtle accent",
     bestFor: "Tech, marketing, creative roles",
     accentColor: "#0ea5e9",
+    previewSrc: "/templates/modern.png",
   },
   {
     id: "minimal",
     name: "Minimal",
     tagline: "Education and skills forward",
     bestFor: "Students and entry-level applicants",
-    accentColor: "#16a34a",
+    accentColor: "#1e293b",
+    previewSrc: "/templates/minimal.png",
   },
 ];
 

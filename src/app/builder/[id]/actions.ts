@@ -28,10 +28,18 @@ export async function saveResumeSection(
   try {
     const { supabase, resume } = await loadResume(id);
     const next = { ...(resume.data as ResumeData), ...patch };
-    const { error } = await supabase
-      .from("resumes")
-      .update({ data: next })
-      .eq("id", id);
+    const update: { data: ResumeData; title?: string } = { data: next };
+
+    // Auto-rename: while the title is still the default, derive it from the
+    // user's full name so the dashboard doesn't show a sea of "Untitled".
+    const isDefaultTitle =
+      !resume.title || resume.title === "Untitled resume";
+    const derivedName = next.personal?.fullName?.trim();
+    if (isDefaultTitle && derivedName) {
+      update.title = `${derivedName}'s CV`;
+    }
+
+    const { error } = await supabase.from("resumes").update(update).eq("id", id);
     if (error) return { ok: false, error: error.message };
     return { ok: true };
   } catch (e) {

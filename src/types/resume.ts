@@ -7,6 +7,7 @@ export type ResumeData = {
     location: string;
     website?: string;
     linkedin?: string;
+    avatarUrl?: string;
   };
   summary: string;
   experience: ExperienceItem[];

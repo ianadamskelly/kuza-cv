@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { templates } from "@/lib/templates";
@@ -28,30 +29,35 @@ export default async function TemplatesPage() {
             {templates.map((t) => (
               <div
                 key={t.id}
-                className="rounded-xl border bg-card p-5 flex flex-col"
+                className="rounded-xl border bg-card p-3 flex flex-col"
               >
                 <div
-                  className="aspect-[3/4] rounded-lg border mb-4 bg-gradient-to-b from-white to-muted flex items-end p-3"
+                  className="aspect-[210/297] rounded-md overflow-hidden border bg-white relative"
                   style={{ borderColor: t.accentColor + "33" }}
                 >
-                  <div
-                    className="w-full h-1.5 rounded-full"
-                    style={{ background: t.accentColor }}
+                  <Image
+                    src={t.previewSrc}
+                    alt={`${t.name} resume template preview`}
+                    fill
+                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                    className="object-cover object-top"
                   />
                 </div>
-                <h3 className="font-semibold">{t.name}</h3>
-                <p className="text-sm text-muted-foreground mt-0.5">
-                  {t.tagline}
-                </p>
-                <p className="text-xs text-muted-foreground mt-3 flex-1">
-                  Best for: {t.bestFor}
-                </p>
-                <form action={createResumeAction} className="mt-4">
-                  <input type="hidden" name="templateId" value={t.id} />
-                  <Button type="submit" className="w-full h-10">
-                    Use this template
-                  </Button>
-                </form>
+                <div className="p-2 pt-3 flex-1 flex flex-col">
+                  <h3 className="font-semibold">{t.name}</h3>
+                  <p className="text-sm text-muted-foreground mt-0.5">
+                    {t.tagline}
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-3 flex-1">
+                    Best for: {t.bestFor}
+                  </p>
+                  <form action={createResumeAction} className="mt-4">
+                    <input type="hidden" name="templateId" value={t.id} />
+                    <Button type="submit" className="w-full h-10">
+                      Use this template
+                    </Button>
+                  </form>
+                </div>
               </div>
             ))}
           </div>
