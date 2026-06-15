@@ -36,7 +36,11 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
 
-RUN addgroup --system --gid 1001 nodejs \
+# curl for orchestrator healthchecks (Coolify's busybox wget hits IPv6
+# `localhost` first on Alpine and gets "Connection refused" since Next
+# binds to IPv4 only). curl handles dual-stack cleanly.
+RUN apk add --no-cache curl \
+ && addgroup --system --gid 1001 nodejs \
  && adduser --system --uid 1001 nextjs
 
 # next standalone output bundles only what the server needs.
@@ -46,5 +50,8 @@ COPY --from=build --chown=nextjs:nodejs /app/public ./public
 
 USER nextjs
 EXPOSE 3000
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
+  CMD curl -fsS http://127.0.0.1:3000/ || exit 1
 
 CMD ["node", "server.js"]
